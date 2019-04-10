@@ -8,7 +8,7 @@ koan 'inserting data' do
     currency: 'GBP'
   }
 
-  __change_me__
+  database[:order].insert(row)
 
   q.expect_row_for_first_koan_to_exist
 
@@ -21,7 +21,7 @@ koan 'select all rows' do
 
   q.insert_some_rows
 
-  __change_me__
+  rows = database[:order].all
 
   expect(rows.length).to eq(2)
 
@@ -41,8 +41,7 @@ koan 'select specific columns' do
 
   q.insert_some_rows
 
-  rows = __change_me__
-
+  rows = database[:order].select(:number, :total).all
   expect(rows.length).to eq(2)
   expect(rows.map(&:keys).flatten.uniq).to(
     eq([:number, :total])
@@ -58,7 +57,7 @@ koan 'we can filter' do
   q.insert_some_rows
 
   row = database[:order]
-    .where(__change_me__)
+    .where(id: 1)
     .first
 
   expect(row).to(
@@ -78,7 +77,7 @@ koan 'we can filter with a block' do
   q.insert_some_rows
 
   row = database[:order]
-    .where { |o| o.total > __change_me__ }
+    .where { |o| o.total > '23' }
     .order_by(Sequel.desc(:id))
 
   row = row.first
@@ -99,7 +98,7 @@ koan 'we can filter with an instance eval-ed block' do
   q.insert_some_rows
 
   row = database[:order]
-    .where { total > __change_me__ }
+    .where { total > '23' }
     .order_by(Sequel.desc(:id))
 
   row = row.first
@@ -162,4 +161,3 @@ dont_edit_this_bit do
     end
   end
 end
-
